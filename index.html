@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spreken A1 - Kartlar</title>
+  <link rel="manifest" id="manifestLink" />
+  <meta name="theme-color" content="#0a84ff" />
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:#f2f4f8;margin:0}
+    .container{max-width:430px;margin:20px auto;padding:16px}
+    .card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+    h1{text-align:center;margin:0 0 14px;font-size:20px}
+    .nl{font-size:20px;font-weight:800;margin:10px 0 6px}
+    .tr{color:#666;font-size:15px;margin:0 0 10px}
+    .a{background:#eef1f6;padding:12px;border-radius:12px;display:none;margin-top:10px;font-size:16px}
+    .a ul{margin:0;padding-left:18px}
+    .a li{margin:6px 0}
+    .meta{display:flex;justify-content:space-between;gap:10px;color:#666;font-size:13px;margin-top:10px}
+    button{width:100%;border:none;border-radius:12px;padding:14px;margin-top:10px;font-size:16px;cursor:pointer}
+    .primary{background:#0a84ff;color:#fff}
+    .secondary{background:#e5e7eb}
+    .warning{background:#ff9f0a;color:#fff}
+    .install{background:#000;color:#fff}
+    .tiny{color:#777;font-size:12px;line-height:1.4;margin-top:12px}
+    .sliderBox{margin-top:12px;font-size:14px;color:#444}
+    input[type=range]{width:100%}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Spreken A1 • Pratik</h1>
+
+      <div class="nl" id="nl"></div>
+      <div class="tr" id="tr"></div>
+      <div class="a" id="a"></div>
+
+      <button class="primary" onclick="speak()">🔊 Soruyu Dinle</button>
+
+      <div class="sliderBox">
+        Konuşma Hızı: <b><span id="rateLabel">1.0</span></b>
+        <input id="rate" type="range" min="0.5" max="1.5" step="0.1" value="1.0" />
+      </div>
+
+      <button class="secondary" onclick="toggleA()">✅ 3 Alternatif Cevap</button>
+      <button class="secondary" onclick="next()">Sonraki</button>
+      <button class="warning" onclick="randomQ()">Rastgele</button>
+      <button class="install" id="installBtn" style="display:none">📲 Ana ekrana ekle</button>
+
+      <div class="meta">
+        <div id="pos"></div>
+        <div id="daily"></div>
+      </div>
+
+      <div class="tiny">
+        iPhone: Safari'de aç → Paylaş → <b>Ana Ekrana Ekle</b>. Offline çalışır.
+      </div>
+    </div>
+  </div>
+
+<script>
+  const cards = [
+    {nl:"Bij wie gaat u wonen in Nederland?", tr:"Hollanda'da kiminle yaşayacaksınız?"},
+    {nl:"Hoe bent u hier gekomen?", tr:"Buraya nasıl geldiniz?"},
+    {nl:"Hoe gaat het met u?", tr:"Nasılsınız?"},
+    {nl:"Hoe gaat u naar uw werk?", tr:"İşe nasıl gidiyorsunuz?"},
+    {nl:"Hoe laat begint u met werken?", tr:"Saat kaçta işe başlıyorsunuz?"},
+    {nl:"Hoe laat gaat u 's avonds naar bed?", tr:"Akşam saat kaçta yatıyorsunuz?"},
+    {nl:"Hoe laat is het nu?", tr:"Saat şimdi kaç?"},
+    {nl:"Hoe laat stopt u met werken?", tr:"Saat kaçta işi bitiriyorsunuz?"},
+    {nl:"Hoe laat wordt u 's ochtends wakker?", tr:"Sabah saat kaçta uyanıyorsunuz?"},
+    {nl:"Hoe reist u meestal?", tr:"Genelde nasıl seyahat edersiniz?"},
+    {nl:"Hoe vaak bent u al in Nederland geweest?", tr:"Hollanda'ya kaç kez gittiniz?"},
+    {nl:"Hoe vaak eet u op een dag?", tr:"Günde kaç kez yemek yersiniz?"},
+    {nl:"Hoe vaak kijkt u tv?", tr:"Ne sıklıkla TV izlersiniz?"},
+    {nl:"Hoe vaak luistert u naar de radio?", tr:"Ne sıklıkla radyo dinlersiniz?"},
+    {nl:"Hoeveel broers en zussen hebt u?", tr:"Kaç kardeşiniz var?"},
+    {nl:"Hoeveel dagen in de week werkt u?", tr:"Haftada kaç gün çalışıyorsunuz?"},
+    {nl:"Hoeveel jaar school hebt u gehad?", tr:"Kaç yıl okula gittiniz?"},
+    {nl:"Hoeveel kinderen hebt u?", tr:"Kaç çocuğunuz var?"},
+    {nl:"Hoeveel talen spreekt u?", tr:"Kaç dil konuşuyorsunuz?"},
+    {nl:"In wat voor huis gaat u wonen in Nederland?", tr:"Hollanda'da nasıl bir evde yaşayacaksınız?"},
+    {nl:"In welk land bent u geboren?", tr:"Hangi ülkede doğdunuz?"},
+    {nl:"In welke plaats gaat u wonen in Nederland?", tr:"Hollanda'da hangi şehirde yaşayacaksınız?"},
+    {nl:"Met hoeveel mensen werkt u?", tr:"Kaç kişiyle çalışıyorsunuz?"},
+    {nl:"Naar welke muziek luistert u graag?", tr:"Hangi müziği dinlemeyi seversiniz?"},
+    {nl:"Op welke dagen werkt u?", tr:"Hangi günler çalışıyorsunuz?"},
+    {nl:"Van welke muziek houdt u?", tr:"Hangi müziği seversiniz?"},
+    {nl:"Waar bent u geboren?", tr:"Nerede doğdunuz?"},
+    {nl:"Waar doet u boodschappen?", tr:"Alışverişi nerede yaparsınız?"},
+    {nl:"Waar heeft u Nederlands geleerd?", tr:"Hollandacayı nerede öğrendiniz?"},
+    {nl:"Waar woont u?", tr:"Nerede yaşıyorsunuz?"},
+    {nl:"Waar woont uw familie?", tr:"Aileniz nerede yaşıyor?"},
+    {nl:"Waarom leert u Nederlands?", tr:"Neden Hollandaca öğreniyorsunuz?"},
+    {nl:"Waarom wilt u naar Nederland?", tr:"Neden Hollanda'ya gitmek istiyorsunuz?"},
+    {nl:"Wanneer bent u blij?", tr:"Ne zaman mutlu olursunuz?"},
+    {nl:"Wanneer bent u geboren?", tr:"Ne zaman doğdunuz?"},
+    {nl:"Wanneer doet u boodschappen?", tr:"Ne zaman alışveriş yaparsınız?"},
+    {nl:"Wanneer geeft u een feest?", tr:"Ne zaman parti verirsiniz?"},
+    {nl:"Wanneer wilt u naar Nederland gaan?", tr:"Ne zaman Hollanda'ya gitmek istiyorsunuz?"},
+    {nl:"Wat doet u graag buiten?", tr:"Dışarıda ne yapmayı seversiniz?"},
+    {nl:"Wat doet u graag met uw familie?", tr:"Ailenizle ne yapmayı seversiniz?"},
+    {nl:"Wat doet u graag met uw vrienden?", tr:"Arkadaşlarınızla ne yapmayı seversiniz?"},
+    {nl:"Wat doet u in het weekend?", tr:"Hafta sonu ne yaparsınız?"},
+    {nl:"Wat doet u in uw vrije tijd?", tr:"Boş zamanınızda ne yaparsınız?"},
+    {nl:"Wat doet u op een feestdag?", tr:"Bayram/özel günde ne yaparsınız?"},
+    {nl:"Wat drinkt u graag?", tr:"Ne içmeyi seversiniz?"},
+    {nl:"Wat eet u op een feest?", tr:"Bir partide ne yersiniz?"},
+    {nl:"Wat eet u 's avonds?", tr:"Akşam ne yersiniz?"},
+    {nl:"Wat eet u 's ochtends?", tr:"Sabah ne yersiniz?"},
+    {nl:"Wat gaat u morgen doen?", tr:"Yarın ne yapacaksınız?"},
+    {nl:"Wat gaat u vandaag eten?", tr:"Bugün ne yiyeceksiniz?"},
+    {nl:"Wat hebt u geleerd op school?", tr:"Okulda ne öğrendiniz?"},
+    {nl:"Wat hebt u gisteren gedaan?", tr:"Dün ne yaptınız?"},
+    {nl:"Wat hebt u gisteren gegeten?", tr:"Dün ne yediniz?"},
+    {nl:"Wat is uw adres?", tr:"Adresiniz nedir?"},
+    {nl:"Wat is uw telefoonnummer?", tr:"Telefon numaranız nedir?"},
+    {nl:"Wat kookt u graag?", tr:"Ne pişirmeyi seversiniz?"},
+    {nl:"Wat vindt u van de Nederlandse taal?", tr:"Hollandaca dili hakkında ne düşünüyorsunuz?"},
+    {nl:"Wat vindt u van Nederland?", tr:"Hollanda hakkında ne düşünüyorsunuz?"},
+    {nl:"Wat vindt u van Nederlandse mensen?", tr:"Hollandalı insanlar hakkında ne düşünüyorsunuz?"},
+    {nl:"Wat vindt u van uw huis?", tr:"Eviniz hakkında ne düşünüyorsunuz?"},
+    {nl:"Wat voor kleren draagt u vaak?", tr:"Genelde ne giyersiniz?"},
+    {nl:"Wat voor kleren vindt u mooi?", tr:"Hangi kıyafetleri güzel bulursunuz?"},
+    {nl:"Wat voor weer is het vandaag?", tr:"Bugün hava nasıl?"},
+    {nl:"Wat voor werk wilt u doen?", tr:"Ne iş yapmak istiyorsunuz?"},
+    {nl:"Wat wilt u graag leren in Nederland?", tr:"Hollanda'da ne öğrenmek istiyorsunuz?"},
+    {nl:"Welk cadeau geeft u graag aan iemand?", tr:"Birine hangi hediyeyi vermeyi seversiniz?"},
+    {nl:"Welk eten koopt u vaak?", tr:"Hangi yiyeceği sık alırsınız?"},
+    {nl:"Welk feest vindt u leuk?", tr:"Hangi kutlamayı seversiniz?"},
+    {nl:"Welk fruit eet u graag?", tr:"Hangi meyveyi seversiniz?"},
+    {nl:"Welke dag is het vandaag?", tr:"Bugün günlerden ne?"},
+    {nl:"Welke dieren vindt u leuk?", tr:"Hangi hayvanları seversiniz?"},
+    {nl:"Welke groente eet u vaak?", tr:"Hangi sebzeyi sık yersiniz?"},
+    {nl:"Welke kleur vindt u mooi?", tr:"Hangi rengi seversiniz?"},
+    {nl:"Welke maand is het nu?", tr:"Şu an hangi ay?"},
+    {nl:"Welke sport doet u?", tr:"Hangi sporu yaparsınız?"},
+    {nl:"Welke talen spreekt u?", tr:"Hangi dilleri konuşuyorsunuz?"},
+    {nl:"Wie helpt u met Nederlands leren?", tr:"Hollandaca öğrenirken size kim yardım ediyor?"},
+    {nl:"Wie wonen bij u in huis?", tr:"Evde sizinle kim yaşıyor?"}
+  ];
+
+  function answersFor(card){
+    const nl = card.nl.toLowerCase();
+
+    if(nl.includes('hoe laat')) return ['Om acht uur.', 'Om negen uur.', 'Om vijf uur.'];
+    if(nl.startsWith('hoeveel')) return ['Twee kinderen.', 'Drie dagen.', 'Eén persoon.'];
+    if(nl.startsWith('hoe vaak')) return ['Elke dag.', 'Soms thuis.', 'Vaak tv.'];
+
+    if(nl.startsWith('waar') || nl.startsWith('in welk') || nl.startsWith('in welke')){
+      if(nl.includes('land')) return ['In Turkije.', 'In Nederland.', 'In Istanbul.'];
+      if(nl.includes('plaats')) return ['In Amsterdam.', 'In Rotterdam.', 'In Eindhoven.'];
+      return ['In Turkije.', 'Thuis burada.', 'In de stad.'];
+    }
+
+    if(nl.startsWith('waarom')) return ['Voor werk.', 'Voor familie.', 'Voor toekomst.'];
+
+    if(nl.startsWith('wanneer')){
+      if(nl.includes('geboren')) return ['In 1995.', 'In 1990.', 'Op maandag.'];
+      return ['Volgende maand.', 'Volgend jaar.', 'Heel snel.'];
+    }
+
+    if(nl.startsWith('wie')) return ['Met mijn vrouw.', 'Met familie.', 'Met mijn man.'];
+
+    if(nl.includes('drinkt')) return ['Ik drink thee.', 'Ik drink koffie.', 'Alleen water.'];
+    if(nl.includes('eet') || nl.includes('eten')) return ['Ik eet brood.', 'Ik eet rijst.', 'Ik eet thuis.'];
+
+    if(nl.includes('muziek')) return ['Pop muziek.', 'Turkse muziek.', 'Rustige muziek.'];
+
+    if(nl.includes('welke dag')) return ['Vandaag maandag.', 'Vandaag vrijdag.', 'Het is maandag.'];
+    if(nl.includes('welke maand')) return ['Het is januari.', 'Het is februari.', 'Het is maart.'];
+    if(nl.includes('welke kleur')) return ['Kleur blauw.', 'Kleur zwart.', 'Kleur wit.'];
+    if(nl.includes('welke sport')) return ['Ik speel voetbal.', 'Ik wandel vaak.', 'Ik zwem soms.'];
+    if(nl.includes('welke talen')) return ['Ik spreek Turks.', 'Turks en Nederlands.', 'Ook Engels.'];
+
+    if(nl.includes('huis')) return ['Een appartement.', 'Een klein huis.', 'Met familie.'];
+
+    if(nl.includes('werk') && nl.includes('doen')) return ['In de winkel.', 'Schoonmaak werk.', 'Kantoor werk.'];
+
+    if(nl.includes('adres')) return ['Mijn adres hier.', 'In Istanbul.', 'Nieuwe adres.'];
+    if(nl.includes('telefoon')) return ['Nul zes nummer.', 'Mijn nummer hier.', 'Nederlands nummer.'];
+
+    if(nl.includes('vrije tijd')) return ['Ik lees boeken.', 'Ik kijk tv.', 'Ik wandel buiten.'];
+    if(nl.includes('weekend')) return ['Ik rust thuis.', 'Met familie thuis.', 'Ik ga wandelen.'];
+    if(nl.includes('buiten')) return ['Ik wandel buiten.', 'Ik ga lopen.', 'Met vrienden buiten.'];
+    if(nl.includes('vrienden')) return ['Met vrienden koffie.', 'Samen praten.', 'Samen wandelen.'];
+    if(nl.includes('familie')) return ['Met mijn familie.', 'Samen eten.', 'Samen thuis.'];
+
+    if(nl.includes('vindt u van')) return ['Heel goed.', 'Best moeilijk.', 'Heel mooi.'];
+    if(nl.includes('kleren')) return ['Sport kleren.', 'Casual kleren.', 'Mooie kleren.'];
+    if(nl.includes('weer')) return ['Mooi weer.', 'Koud weer.', 'Regen vandaag.'];
+
+    return ['Het is goed.', 'Ik weet niet.', 'Heel goed.'];
+  }
+
+  let i = 0;
+  const nlEl = document.getElementById('nl');
+  const trEl = document.getElementById('tr');
+  const aEl  = document.getElementById('a');
+  const posEl = document.getElementById('pos');
+  const dailyEl = document.getElementById('daily');
+  const rateEl = document.getElementById('rate');
+  const rateLabelEl = document.getElementById('rateLabel');
+
+  const todayKey = 'daily-' + new Date().toDateString();
+  let dailyCount = parseInt(localStorage.getItem(todayKey) || '0', 10);
+  function bumpDaily(){
+    dailyCount += 1;
+    localStorage.setItem(todayKey, String(dailyCount));
+    dailyEl.textContent = 'Bugün: ' + dailyCount;
+  }
+
+  function render(){
+    const c = cards[i];
+    nlEl.textContent = c.nl;
+    trEl.textContent = c.tr;
+
+    const ans = answersFor(c);
+    aEl.innerHTML = '<ul>' + ans.map(x => '<li>' + x + '</li>').join('') + '</ul>';
+    aEl.style.display = 'none';
+
+    posEl.textContent = (i+1) + ' / ' + cards.length;
+    bumpDaily();
+  }
+
+  function toggleA(){
+    aEl.style.display = (aEl.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function next(){
+    i = (i + 1) % cards.length;
+    render();
+  }
+
+  function randomQ(){
+    i = Math.floor(Math.random() * cards.length);
+    render();
+  }
+
+  function speak(){
+    const c = cards[i];
+    if(!('speechSynthesis' in window)){
+      alert('Bu cihazda sesli okuma desteklenmiyor.');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(c.nl);
+    u.lang = 'nl-NL';
+    u.rate = parseFloat(rateEl.value);
+    window.speechSynthesis.speak(u);
+  }
+
+  rateEl.addEventListener('input', () => {
+    rateLabelEl.textContent = rateEl.value;
+  });
+
+  window.toggleA = toggleA;
+  window.next = next;
+  window.randomQ = randomQ;
+  window.speak = speak;
+
+  if('serviceWorker' in navigator){
+    const swCode = `
+      self.addEventListener('install', e => {
+        self.skipWaiting();
+        e.waitUntil(caches.open('app').then(c => c.addAll(['./'])));
+      });
+      self.addEventListener('fetch', e => {
+        e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+      });
+    `;
+    const swUrl = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
+    navigator.serviceWorker.register(swUrl);
+  }
+
+  const manifest = {
+    name: 'Spreken A1 Kartlar',
+    short_name: 'A1',
+    display: 'standalone',
+    start_url: './',
+    background_color: '#ffffff',
+    theme_color: '#0a84ff',
+    icons: [{
+      src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAApUlEQVR4Ae3WsQ2AMAxF0Vv7L2bQKXc5NyEJD7BqXc9Ew4kRzj5L7sRKqzZo4PM8XgS5aXoaZySUdkGFUTkOcJCIZyQQ4Ei5IQRL3LXYhIwrKyYVJZZzKzbwBjacVykBLL8GMDIS9ZhDJW60Agw7O3cu6UytzszbmWzxubAEANe0yoyS9MhUlCT3VkOITkkpFmS6r30YIOCQM7DDDeWGPAHDLcBYLaDT+xr3aMcAAAAASUVORK5CYII=',
+      sizes: '64x64',
+      type: 'image/png'
+    }]
+  };
+  document.getElementById('manifestLink').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type:'application/json'}));
+
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block';
+  });
+  installBtn.addEventListener('click', async () => {
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.style.display = 'none';
+  });
+
+  (function tests(){
+    try{
+      console.assert(Array.isArray(cards) && cards.length === 78, 'cards length should be 78');
+      console.assert(typeof answersFor === 'function', 'answersFor should be a function');
+      console.assert(typeof speak === 'function', 'speak should be a function');
+      const sample = answersFor(cards[0]);
+      console.assert(Array.isArray(sample) && sample.length === 3, 'answersFor should return 3 answers');
+    }catch(e){
+      console.warn('Self-tests failed:', e);
+    }
+  })();
+
+  dailyEl.textContent = 'Bugün: ' + dailyCount;
+  render();
+</script>
+</body>
+</html>
