@@ -1,73 +1,642 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spreken A1 Ezber</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-        .questions {
-            margin: 20px;
-        }
-        .question {
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spreken A1 - Ezber Uygulaması</title>
+  <link rel="manifest" id="manifestLink" />
+  <meta name="theme-color" content="#0a84ff" />
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:#f2f4f8;margin:0;transition:.25s}
+    body.dark{background:#0b1220;color:#e5e7eb}
+    .container{max-width:430px;margin:20px auto;padding:16px}
+    .card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:.25s}
+    body.dark .card{background:#162033;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+    h1{text-align:center;margin:0 0 14px;font-size:20px}
+    .nl{font-size:20px;font-weight:800;margin:10px 0 6px}
+    .tr{color:#64748b;font-size:15px;margin:0 0 10px}
+    body.dark .tr{color:#cbd5e1}
+
+    .memorize{background:#fff3cd;border:2px solid #facc15;border-radius:12px;padding:14px;margin-top:10px;font-weight:800;font-size:17px;display:block}
+    body.dark .memorize{background:#3a2400;border-color:#facc15}
+
+    .a{background:#eef1f6;padding:12px;border-radius:12px;display:none;margin-top:10px;font-size:16px}
+    body.dark .a{background:#22314f}
+    .a ul{margin:0;padding-left:18px}
+    .a li{margin:6px 0}
+
+    button{width:100%;border:none;border-radius:12px;padding:14px;margin-top:10px;font-size:16px;cursor:pointer}
+    .primary{background:#0a84ff;color:#fff}
+    .secondary{background:#e5e7eb}
+    body.dark .secondary{background:#24324f;color:#e5e7eb}
+    .mode{background:#10b981;color:#fff}
+    .darkbtn{background:#111827;color:#fff}
+
+    .sliderBox{margin-top:12px;font-size:14px;color:#475569}
+    body.dark .sliderBox{color:#cbd5e1}
+    input[type=range]{width:100%}
+
+    .meta{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:13px;color:#64748b;flex-wrap:wrap}
+    body.dark .meta{color:#cbd5e1}
+    .badge{display:inline-block;background:#f1f5f9;border:1px solid #e2e8f0;color:#334155;border-radius:999px;padding:2px 10px;font-size:12px}
+    body.dark .badge{background:#111b2d;border-color:#2a3a5d;color:#cbd5e1}
+
+    .tiny{color:#94a3b8;font-size:12px;line-height:1.4;margin-top:12px}
+  </style>
 </head>
 <body>
-    <h1>Spreken A1 Ezber</h1>
-    <button id="toggle-dark-mode">Toggle Dark Mode</button>
-    <div class="questions">
-        <!-- 78 Dutch-Turkish questions here -->
-        <div class="question">Waar is de bibliotheek? (Kütüphane nerede?)</div>
-        <div class="question">Hoe laat is het? (Saat kaç?)</div>
-        <div class="question">Ik ben op zoek naar een restaurant. (Bir restorant arıyorum.)</div>
-        <div class="question">Kun je dat herhalen? (Bunu tekrar edebilir misin?)</div>
-        <div class="question">Wat kost het? (Bu ne kadar?)</div>
-        <div class="question">Ik heb honger. (Açım.)</div>
-        <div class="question">Hoe gaat het met je? (Nasılsın?)</div>
-        <div class="question">Waar woon je? (Nerede yaşıyorsun?)</div>
-        <div class="question">Wat is je naam? (Adın ne?)</div>
-        <div class="question">Wat doe je voor werk? (Ne iş yapıyorsun?)</div>
-        <div class="question">Kan ik met een creditcard betalen? (Kredi kartıyla ödeyebilir miyim?)</div>
-        <div class="question">Ik begrijp het niet. (Anlamıyorum.)</div>
-        <div class="question">Spreek je Engels? (İngilizce biliyor musun?)</div>
-        <div class="question">Waar kan ik een taxi vinden? (Bir taksi nerede bulabilirim?)</div>
-        <div class="question">Wat is het weer vandaag? (Bugün hava nasıl?)</div>
-        <div class="question">Ik heb een reservering. (Bir rezervasyonum var.)</div>
-        <div class="question">Mag ik het menu zien? (Menüyü görebilir miyim?)</div>
-        <div class="question">Wat is je favoriete kleur? (En sevdiğin renk ne?)</div>
-        <div class="question">Wat is je hobby? (Hobilerin neler?)</div>
-        <div class="question">Kun je me helpen? (Bana yardım edebilir misin?)</div>
-        <div class="question">Ik ben moe. (Yorgunum.)</div>
-        <div class="question">Dit is mijn vriend. (Bu benim arkadaşım.)</div>
-        <!-- Add remaining questions here up to 78 -->
+  <div class="container">
+    <div class="card">
+      <h1>🎯 Spreken A1 • Ezber</h1>
+
+      <div class="nl" id="nl"></div>
+      <div class="tr" id="tr"></div>
+
+      <div class="memorize" id="memorize"></div>
+      <div class="a" id="a"></div>
+
+      <button class="primary" onclick="speak()">🔊 Soruyu Dinle</button>
+
+      <div class="sliderBox">Konuşma Hızı: <b><span id="rateLabel">1.0</span></b></div>
+      <input id="rate" type="range" min="0.5" max="1.5" step="0.1" value="1.0" />
+
+      <button class="mode" onclick="toggleMemorize()">🧠 Ezber Modu Aç/Kapat</button>
+      <button class="secondary" onclick="toggleAnswers()">📋 3 Alternatif Cevap</button>
+      <button class="darkbtn" onclick="toggleDark()">🌙 Karanlık Mod</button>
+      <button class="secondary" onclick="prev()">⬅️ Önceki Soru</button>
+      <button class="secondary" onclick="next()">➡️ Sonraki Soru</button>
+      <button class="secondary" onclick="randomQ()">🎲 Rastgele</button>
+
+      <div class="meta">
+        <div id="pos"></div>
+        <div><span class="badge" id="offlineStatus">Offline: kontrol...</span></div>
+      </div>
+
+      <div class="tiny">
+        iPhone: Safari → Paylaş → <b>Ana Ekrana Ekle</b>. Offline için GitHub Pages/Netlify gibi bir host + <b>sw.js</b> dosyası gerekir.
+      </div>
     </div>
+  </div>
 
-    <script>
-        const questions = document.querySelectorAll('.question');
-        const synth = window.speechSynthesis;
+<script>
+  // Inline onclick kullandığımız için fonksiyonlar GLOBAL olmalı.
+  // Bazı ortamlarda script hata verirse fonksiyonlar hiç tanımlanmıyor ve
+  // "toggleMemorize is not defined" hatası çıkıyor. Bunu önlemek için
+  // önce güvenli global stub'ları tanımlıyoruz, sonra init içinde gerçeklerini atıyoruz.
 
-        questions.forEach(question => {
-            question.addEventListener('click', () => {
-                const text = question.innerText;
-                const utterance = new SpeechSynthesisUtterance(text);
-                synth.speak(utterance);
-            });
-        });
+  window.toggleMemorize = () => {};
+  window.toggleAnswers  = () => {};
+  window.toggleDark     = () => {};
+  window.next           = () => {};
+  window.randomQ        = () => {};
+  window.speak          = () => {};
 
-        const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
-        toggleDarkModeButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-        });
-    </script>
+  (function init(){
+    try{
+      // Kişisel bilgiler (senin verdiğin)
+      const PROFILE = {
+        birthYear: 1993,
+        birthCity: 'Ankara',
+        currentCity: 'Manisa',
+        nlCity: 'Helmond',
+        partnerWord: 'mijn partner',
+        languages: ['Turks', 'Engels'],
+        job: 'kapitein',
+        wake: 'zeven',      // 07:00
+        sleep: 'elf',       // 23:00
+        workStart: 'acht',  // 08:00
+        breakfastTime: 'negen',
+        phone: '5549267218'
+      };
+
+      // 78 soru + her biri için 3 SABİT cevap.
+      // KURAL: answers[0] = EZBER cevabı.
+      const cards = [
+        {nl:"Bij wie gaat u wonen in Nederland?", tr:"Hollanda’da kiminle yaşayacaksınız?", answers:[
+          `Ik woon met ${PROFILE.partnerWord}.`,
+          `Samen met ${PROFILE.partnerWord}.`,
+          `Ik ga met ${PROFILE.partnerWord} wonen.`
+        ]},
+        {nl:"Hoe bent u hier gekomen?", tr:"Buraya nasıl geldiniz?", answers:[
+          "Met het vliegtuig.",
+          "Met de bus.",
+          "Met de auto."
+        ]},
+        {nl:"Hoe gaat het met u?", tr:"Nasılsınız?", answers:[
+          "Het gaat goed.",
+          "Heel goed.",
+          "Goed, dank u."
+        ]},
+        {nl:"Hoe gaat u naar uw werk?", tr:"İşe nasıl gidiyorsunuz?", answers:[
+          "Met de auto.",
+          "Met de bus.",
+          "Met het openbaar vervoer."
+        ]},
+        {nl:"Hoe laat begint u met werken?", tr:"Saat kaçta işe başlıyorsunuz?", answers:[
+          `Om ${PROFILE.workStart} uur.`,
+          "Om acht uur 's ochtends.",
+          "Rond acht uur."
+        ]},
+        {nl:"Hoe laat gaat u 's avonds naar bed?", tr:"Akşam saat kaçta yatıyorsunuz?", answers:[
+          `Om ${PROFILE.sleep} uur.`,
+          "Om 23 uur.",
+          "Rond elf uur."
+        ]},
+        {nl:"Hoe laat is het nu?", tr:"Saat şimdi kaç?", answers:[
+          "Het is tien uur.",
+          "Het is negen uur.",
+          "Het is elf uur."
+        ]},
+        {nl:"Hoe laat stopt u met werken?", tr:"Saat kaçta işi bitiriyorsunuz?", answers:[
+          "Om vijf uur.",
+          "Om zes uur.",
+          "Rond vijf uur."
+        ]},
+        {nl:"Hoe laat wordt u 's ochtends wakker?", tr:"Sabah saat kaçta uyanıyorsunuz?", answers:[
+          `Om ${PROFILE.wake} uur.`,
+          "Ik word wakker om zeven uur.",
+          "Rond zeven uur."
+        ]},
+        {nl:"Hoe reist u meestal?", tr:"Genelde nasıl seyahat edersiniz?", answers:[
+          "Meestal met het vliegtuig.",
+          "Meestal met de auto.",
+          "Meestal met de bus."
+        ]},
+        {nl:"Hoe vaak bent u al in Nederland geweest?", tr:"Hollanda’ya kaç kez gittiniz?", answers:[
+          "Nog nooit.",
+          "Eén keer.",
+          "Twee keer."
+        ]},
+        {nl:"Hoe vaak eet u op een dag?", tr:"Günde kaç kez yemek yersiniz?", answers:[
+          "Drie keer per dag.",
+          "Twee keer per dag.",
+          "Drie maaltijden."
+        ]},
+        {nl:"Hoe vaak kijkt u tv?", tr:"Ne sıklıkla TV izlersiniz?", answers:[
+          "Soms.",
+          "Elke dag.",
+          "In de avond."
+        ]},
+        {nl:"Hoe vaak luistert u naar de radio?", tr:"Ne sıklıkla radyo dinlersiniz?", answers:[
+          "Niet vaak.",
+          "Soms.",
+          "Af en toe."
+        ]},
+        {nl:"Hoeveel broers en zussen hebt u?", tr:"Kaç kardeşiniz var?", answers:[
+          "Ik heb één broer.",
+          "Ik heb één zus.",
+          "Ik heb broers en zussen."
+        ]},
+        {nl:"Hoeveel dagen in de week werkt u?", tr:"Haftada kaç gün çalışıyorsunuz?", answers:[
+          "Vijf dagen.",
+          "Zes dagen.",
+          "Vier dagen."
+        ]},
+        {nl:"Hoeveel jaar school hebt u gehad?", tr:"Kaç yıl okula gittiniz?", answers:[
+          "Twaalf jaar.",
+          "Tien jaar.",
+          "Elf jaar."
+        ]},
+        {nl:"Hoeveel kinderen hebt u?", tr:"Kaç çocuğunuz var?", answers:[
+          "Ik heb geen kinderen.",
+          "Geen kinderen.",
+          "Nog geen kinderen."
+        ]},
+        {nl:"Hoeveel talen spreekt u?", tr:"Kaç dil konuşuyorsunuz?", answers:[
+          "Ik spreek Turks en Engels.",
+          "Twee talen.",
+          "Turks en Engels."
+        ]},
+        {nl:"In wat voor huis gaat u wonen in Nederland?", tr:"Hollanda’da nasıl bir evde yaşayacaksınız?", answers:[
+          `In een huis met ${PROFILE.partnerWord}.`,
+          "In een appartement.",
+          "In een huurhuis."
+        ]},
+        {nl:"In welk land bent u geboren?", tr:"Hangi ülkede doğdunuz?", answers:[
+          "In Turkije.",
+          "Ik ben geboren in Turkije.",
+          "Turkije."
+        ]},
+        {nl:"In welke plaats gaat u wonen in Nederland?", tr:"Hollanda’da hangi şehirde yaşayacaksınız?", answers:[
+          `In ${PROFILE.nlCity}.`,
+          `Ik ga in ${PROFILE.nlCity} wonen.`,
+          `${PROFILE.nlCity} in Nederland.`
+        ]},
+        {nl:"Met hoeveel mensen werkt u?", tr:"Kaç kişiyle çalışıyorsunuz?", answers:[
+          "Met een team.",
+          "Met veel mensen.",
+          "Met tien mensen."
+        ]},
+        {nl:"Naar welke muziek luistert u graag?", tr:"Hangi müziği dinlemeyi seversiniz?", answers:[
+          "Ik luister graag naar pop.",
+          "Ik luister graag naar Turkse muziek.",
+          "Ik luister graag naar rustige muziek."
+        ]},
+        {nl:"Op welke dagen werkt u?", tr:"Hangi günler çalışıyorsunuz?", answers:[
+          "Maandag tot vrijdag.",
+          "Doordeweeks.",
+          "Vijf dagen per week."
+        ]},
+        {nl:"Van welke muziek houdt u?", tr:"Hangi müziği seversiniz?", answers:[
+          "Ik houd van pop.",
+          "Ik houd van Turkse muziek.",
+          "Ik houd van rustige muziek."
+        ]},
+        {nl:"Waar bent u geboren?", tr:"Nerede doğdunuz?", answers:[
+          `In ${PROFILE.birthCity}.`,
+          `Ik ben geboren in ${PROFILE.birthCity}.`,
+          `${PROFILE.birthCity} in Turkije.`
+        ]},
+        {nl:"Waar doet u boodschappen?", tr:"Alışverişi nerede yaparsınız?", answers:[
+          "In de supermarkt.",
+          "Op de markt.",
+          "Bij de winkel."
+        ]},
+        {nl:"Waar heeft u Nederlands geleerd?", tr:"Hollandacayı nerede öğrendiniz?", answers:[
+          "Online.",
+          "Thuis.",
+          "In een cursus."
+        ]},
+        {nl:"Waar woont u?", tr:"Nerede yaşıyorsunuz?", answers:[
+          `Ik woon in ${PROFILE.currentCity}.`,
+          `In ${PROFILE.currentCity}, Turkije.`,
+          "Ik woon in Turkije."
+        ]},
+        {nl:"Waar woont uw familie?", tr:"Aileniz nerede yaşıyor?", answers:[
+          "Mijn familie woont in Turkije.",
+          `In ${PROFILE.currentCity}.`,
+          "In Turkije."
+        ]},
+        {nl:"Waarom leert u Nederlands?", tr:"Neden Hollandaca öğreniyorsunuz?", answers:[
+          `Voor ${PROFILE.partnerWord}.`,
+          "Voor mijn leven in Nederland.",
+          "Voor integratie."
+        ]},
+        {nl:"Waarom wilt u naar Nederland?", tr:"Neden Hollanda’ya gitmek istiyorsunuz?", answers:[
+          `Voor ${PROFILE.partnerWord}.`,
+          "Om samen te wonen.",
+          "Voor mijn toekomst."
+        ]},
+        {nl:"Wanneer bent u blij?", tr:"Ne zaman mutlu olursunuz?", answers:[
+          `Als ik bij ${PROFILE.partnerWord} ben.`,
+          "Als ik vakantie heb.",
+          "Als ik met familie ben."
+        ]},
+        {nl:"Wanneer bent u geboren?", tr:"Ne zaman doğdunuz?", answers:[
+          `In ${PROFILE.birthYear}.`,
+          `Ik ben geboren in ${PROFILE.birthYear}.`,
+          `Het jaar ${PROFILE.birthYear}.`
+        ]},
+        {nl:"Wanneer doet u boodschappen?", tr:"Ne zaman alışveriş yaparsınız?", answers:[
+          "In het weekend.",
+          "Op zaterdag.",
+          "In de avond."
+        ]},
+        {nl:"Wanneer geeft u een feest?", tr:"Ne zaman parti verirsiniz?", answers:[
+          "Op mijn verjaardag.",
+          "Met nieuwjaar.",
+          "In het weekend."
+        ]},
+        {nl:"Wanneer wilt u naar Nederland gaan?", tr:"Ne zaman Hollanda’ya gitmek istiyorsunuz?", answers:[
+          "Zo snel mogelijk.",
+          "Binnenkort.",
+          "Volgende maand."
+        ]},
+        {nl:"Wat doet u graag buiten?", tr:"Dışarıda ne yapmayı seversiniz?", answers:[
+          "Ik speel graag basketbal.",
+          "Ik wandel graag.",
+          "Ik sport graag."
+        ]},
+        {nl:"Wat doet u graag met uw familie?", tr:"Ailenizle ne yapmayı seversiniz?", answers:[
+          "Samen eten.",
+          "Samen praten.",
+          "Samen op bezoek."
+        ]},
+        {nl:"Wat doet u graag met uw vrienden?", tr:"Arkadaşlarınızla ne yapmayı seversiniz?", answers:[
+          "Samen sporten.",
+          "Koffie drinken.",
+          "Samen praten."
+        ]},
+        {nl:"Wat doet u in het weekend?", tr:"Hafta sonu ne yaparsınız?", answers:[
+          "Ik speel basketbal.",
+          "Ik rust thuis.",
+          "Ik ga wandelen."
+        ]},
+        {nl:"Wat doet u in uw vrije tijd?", tr:"Boş zamanınızda ne yaparsınız?", answers:[
+          "Ik speel basketbal.",
+          "Ik sport.",
+          "Ik kijk tv."
+        ]},
+        {nl:"Wat doet u op een feestdag?", tr:"Bayram/özel günde ne yaparsınız?", answers:[
+          "Ik bezoek familie.",
+          "We eten samen.",
+          "Ik blijf thuis."
+        ]},
+        {nl:"Wat drinkt u graag?", tr:"Ne içmeyi seversiniz?", answers:[
+          "Ik drink graag thee.",
+          "Ik drink graag koffie.",
+          "Ik drink graag water."
+        ]},
+        {nl:"Wat eet u op een feest?", tr:"Bir partide ne yersiniz?", answers:[
+          "Ik eet taart.",
+          "Ik eet snacks.",
+          "Ik eet fruit."
+        ]},
+        {nl:"Wat eet u 's avonds?", tr:"Akşam ne yersiniz?", answers:[
+          "Ik eet 's avonds thuis.",
+          "Ik eet rijst.",
+          "Ik eet soep."
+        ]},
+        {nl:"Wat eet u 's ochtends?", tr:"Sabah ne yersiniz?", answers:[
+          "Ik ontbijt met brood.",
+          "Ik eet brood en kaas.",
+          "Ik eet brood."
+        ]},
+        {nl:"Wat gaat u morgen doen?", tr:"Yarın ne yapacaksınız?", answers:[
+          "Ik ga werken.",
+          "Ik ga leren.",
+          "Ik blijf thuis."
+        ]},
+        {nl:"Wat gaat u vandaag eten?", tr:"Bugün ne yiyeceksiniz?", answers:[
+          "Ik ga thuis eten.",
+          "Ik ga rijst eten.",
+          "Ik ga soep eten."
+        ]},
+        {nl:"Wat hebt u geleerd op school?", tr:"Okulda ne öğrendiniz?", answers:[
+          "Ik heb Engels geleerd.",
+          "Ik heb veel geleerd.",
+          "Ik heb talen geleerd."
+        ]},
+        {nl:"Wat hebt u gisteren gedaan?", tr:"Dün ne yaptınız?", answers:[
+          "Ik heb gewerkt.",
+          "Ik ben thuis gebleven.",
+          "Ik heb gerust."
+        ]},
+        {nl:"Wat hebt u gisteren gegeten?", tr:"Dün ne yediniz?", answers:[
+          "Ik heb rijst gegeten.",
+          "Ik heb pasta gegeten.",
+          "Ik heb brood gegeten."
+        ]},
+        {nl:"Wat is uw adres?", tr:"Adresiniz nedir?", answers:[
+          `Ik woon in ${PROFILE.currentCity}.`,
+          "Mijn adres is [adres].",
+          "[straat] [nummer]."
+        ]},
+        {nl:"Wat is uw telefoonnummer?", tr:"Telefon numaranız nedir?", answers:[
+          `Mijn nummer is ${PROFILE.phone}.`,
+          `Het is ${PROFILE.phone}.`,
+          `Mijn telefoonnummer is ${PROFILE.phone}.`
+        ]},
+        {nl:"Wat kookt u graag?", tr:"Ne pişirmeyi seversiniz?", answers:[
+          "Ik kook graag soep.",
+          "Ik kook graag rijst.",
+          "Ik kook graag pasta."
+        ]},
+        {nl:"Wat vindt u van de Nederlandse taal?", tr:"Hollandaca dili hakkında ne düşünüyorsunuz?", answers:[
+          "Het is moeilijk.",
+          "Best moeilijk.",
+          "Maar leuk."
+        ]},
+        {nl:"Wat vindt u van Nederland?", tr:"Hollanda hakkında ne düşünüyorsunuz?", answers:[
+          "Het is mooi.",
+          "Ik vind het leuk.",
+          "Het is goed."
+        ]},
+        {nl:"Wat vindt u van Nederlandse mensen?", tr:"Hollandalı insanlar hakkında ne düşünüyorsunuz?", answers:[
+          "Ze zijn vriendelijk.",
+          "Ze zijn aardig.",
+          "Goede mensen."
+        ]},
+        {nl:"Wat vindt u van uw huis?", tr:"Eviniz hakkında ne düşünüyorsunuz?", answers:[
+          "Het is goed.",
+          "Het is mooi.",
+          "Het is comfortabel."
+        ]},
+        {nl:"Wat voor kleren draagt u vaak?", tr:"Genelde ne giyersiniz?", answers:[
+          "Ik draag vaak sportkleren.",
+          "Ik draag vaak jeans.",
+          "Ik draag vaak casual kleren."
+        ]},
+        {nl:"Wat voor kleren vindt u mooi?", tr:"Hangi kıyafetleri güzel bulursunuz?", answers:[
+          "Ik vind sportkleren mooi.",
+          "Ik vind nette kleren mooi.",
+          "Ik vind casual kleren mooi."
+        ]},
+        {nl:"Wat voor weer is het vandaag?", tr:"Bugün hava nasıl?", answers:[
+          "Het is mooi weer.",
+          "Het is koud.",
+          "Het regent."
+        ]},
+        {nl:"Wat voor werk wilt u doen?", tr:"Ne iş yapmak istiyorsunuz?", answers:[
+          "Ik wil als kapitein werken.",
+          "Ik wil werken.",
+          "Ik wil een baan."
+        ]},
+        {nl:"Wat wilt u graag leren in Nederland?", tr:"Hollanda’da ne öğrenmek istiyorsunuz?", answers:[
+          "Ik wil Nederlands leren.",
+          "Ik wil beter Nederlands.",
+          "Ik wil de taal leren."
+        ]},
+        {nl:"Welk cadeau geeft u graag aan iemand?", tr:"Birine hangi hediyeyi vermeyi seversiniz?", answers:[
+          "Ik geef graag bloemen.",
+          "Ik geef graag chocolade.",
+          "Ik geef graag een cadeaukaart."
+        ]},
+        {nl:"Welk eten koopt u vaak?", tr:"Hangi yiyeceği sık alırsınız?", answers:[
+          "Ik koop vaak brood.",
+          "Ik koop vaak groenten.",
+          "Ik koop vaak fruit."
+        ]},
+        {nl:"Welk feest vindt u leuk?", tr:"Hangi kutlamayı seversiniz?", answers:[
+          "Verjaardag.",
+          "Nieuwjaar.",
+          "Feest met familie."
+        ]},
+        {nl:"Welk fruit eet u graag?", tr:"Hangi meyveyi seversiniz?", answers:[
+          "Ik eet graag appels.",
+          "Ik eet graag bananen.",
+          "Ik eet graag sinaasappels."
+        ]},
+        {nl:"Welke dag is het vandaag?", tr:"Bugün günlerden ne?", answers:[
+          "Het is [dag].",
+          "Vandaag is het [dag].",
+          "Het is vandaag [dag]."
+        ]},
+        {nl:"Welke dieren vindt u leuk?", tr:"Hangi hayvanları seversiniz?", answers:[
+          "Ik vind katten leuk.",
+          "Ik vind honden leuk.",
+          "Ik hou van dieren."
+        ]},
+        {nl:"Welke groente eet u vaak?", tr:"Hangi sebzeyi sık yersiniz?", answers:[
+          "Ik eet vaak tomaten.",
+          "Ik eet vaak komkommer.",
+          "Ik eet vaak sla."
+        ]},
+        {nl:"Welke kleur vindt u mooi?", tr:"Hangi rengi seversiniz?", answers:[
+          "Ik vind blauw mooi.",
+          "Ik vind zwart mooi.",
+          "Ik vind wit mooi."
+        ]},
+        {nl:"Welke maand is het nu?", tr:"Şu an hangi ay?", answers:[
+          "Het is [maand].",
+          "Nu is het [maand].",
+          "Het is nu [maand]."
+        ]},
+        {nl:"Welke sport doet u?", tr:"Hangi sporu yaparsınız?", answers:[
+          "Ik speel basketbal.",
+          "Ik doe sport.",
+          "Basketbal."
+        ]},
+        {nl:"Welke talen spreekt u?", tr:"Hangi dilleri konuşuyorsunuz?", answers:[
+          "Ik spreek Turks en Engels.",
+          "Turks en Engels.",
+          "Twee talen: Turks en Engels."
+        ]},
+        {nl:"Wie helpt u met Nederlands leren?", tr:"Hollandaca öğrenirken size kim yardım ediyor?", answers:[
+          "Mijn partner helpt mij.",
+          "Mijn docent helpt mij.",
+          "Ik leer online."
+        ]},
+        {nl:"Wie wonen bij u in huis?", tr:"Evde sizinle kim yaşıyor?", answers:[
+          `Ik woon met ${PROFILE.partnerWord}.`,
+          "Mijn partner en ik.",
+          "Samen met mijn partner."
+        ]}
+      ];
+
+      // --- UI state ---
+      let idx = 0;
+      let memorizeMode = true;
+
+      // --- DOM ---
+      const nlEl = document.getElementById('nl');
+      const trEl = document.getElementById('tr');
+      const aEl  = document.getElementById('a');
+      const memorizeEl = document.getElementById('memorize');
+      const posEl = document.getElementById('pos');
+      const rateEl = document.getElementById('rate');
+      const rateLabel = document.getElementById('rateLabel');
+      const offlineEl = document.getElementById('offlineStatus');
+
+      function render(){
+        const c = cards[idx];
+        nlEl.textContent = c.nl;
+        trEl.textContent = c.tr;
+        memorizeEl.textContent = '🎯 EZBER CEVAP: ' + c.answers[0];
+        aEl.innerHTML = '<ul>' + c.answers.map(x => '<li>' + x + '</li>').join('') + '</ul>';
+        memorizeEl.style.display = memorizeMode ? 'block' : 'none';
+        aEl.style.display = 'none';
+        posEl.textContent = (idx + 1) + ' / ' + cards.length;
+      }
+
+      // --- attach GLOBAL handlers (inline onclick needs these names) ---
+      window.toggleMemorize = function(){
+        memorizeMode = !memorizeMode;
+        memorizeEl.style.display = memorizeMode ? 'block' : 'none';
+      };
+
+      window.toggleAnswers = function(){
+        aEl.style.display = (aEl.style.display === 'block') ? 'none' : 'block';
+      };
+
+      window.toggleDark = function(){
+        document.body.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'true' : 'false');
+      };
+
+      window.prev = function(){
+        idx = (idx - 1 + cards.length) % cards.length;
+        render();
+      };
+
+      window.next = function(){
+        idx = (idx + 1) % cards.length;
+        render();
+      };
+
+      window.randomQ = function(){
+        idx = Math.floor(Math.random() * cards.length);
+        render();
+      };
+
+      window.speak = function(){
+        const text = cards[idx].nl;
+        if(!('speechSynthesis' in window)){
+          alert('Bu cihazda sesli okuma desteklenmiyor.');
+          return;
+        }
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'nl-NL';
+        u.rate = parseFloat(rateEl.value);
+        speechSynthesis.speak(u);
+      };
+
+      rateEl.addEventListener('input', () => (rateLabel.textContent = rateEl.value));
+
+      // Dark mode remember
+      if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+
+      // OFFLINE: sw.js var ise register et (blob hatası yok)
+      async function tryRegisterSW(){
+        if(!('serviceWorker' in navigator) || !(location.protocol === 'https:' || location.protocol === 'http:')){
+          offlineEl.textContent = 'Offline: Kapalı';
+          return;
+        }
+        try{
+          const r = await fetch('./sw.js', {cache:'no-store'});
+          if(!r.ok){
+            offlineEl.textContent = 'Offline: sw.js yok';
+            return;
+          }
+          await navigator.serviceWorker.register('./sw.js');
+          offlineEl.textContent = 'Offline: Açık';
+        }catch(e){
+          console.warn('SW register failed:', e);
+          offlineEl.textContent = 'Offline: Kapalı';
+        }
+      }
+
+      // MANIFEST (ikon inline)
+      const manifest = {
+        name: 'Spreken A1 Ezber',
+        short_name: 'A1',
+        display: 'standalone',
+        start_url: './',
+        background_color: '#ffffff',
+        theme_color: '#0a84ff',
+        icons: [{
+          src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAApUlEQVR4Ae3WsQ2AMAxF0Vv7L2bQKXc5NyEJD7BqXc9Ew4kRzj5L7sRKqzZo4PM8XgS5aXoaZySUdkGFUTkOcJCIZyQQ4Ei5IQRL3LXYhIwrKyYVJZZzKzbwBjacVykBLL8GMDIS9ZhDJW60Agw7O3cu6UytzszbmWzxubAEANe0yoyS9MhUlCT3VkOITkkpFmS6r30YIOCQM7DDDeWGPAHDLcBYLaDT+xr3aMcAAAAASUVORK5CYII=',
+          sizes: '64x64',
+          type: 'image/png'
+        }]
+      };
+      document.getElementById('manifestLink').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type:'application/json'}));
+
+      // --- self-tests ---
+      (function tests(){
+        try{
+          console.assert(Array.isArray(cards) && cards.length === 78, 'cards length should be 78');
+          console.assert(cards.every(c => Array.isArray(c.answers) && c.answers.length === 3), 'each card needs 3 answers');
+          console.assert(cards.every(c => typeof c.answers[0] === 'string' && c.answers[0].length > 0), 'memorize answer must exist');
+          console.assert(typeof window.toggleMemorize === 'function', 'toggleMemorize should be a function');
+          console.assert(typeof window.toggleAnswers === 'function', 'toggleAnswers should be a function');
+        }catch(e){
+          console.warn('Self-tests failed:', e);
+        }
+      })();
+
+      // init
+      render();
+      tryRegisterSW();
+
+    }catch(err){
+      console.error('Init failed:', err);
+      // En azından kullanıcıya bir şey gösterelim
+      const offlineEl = document.getElementById('offlineStatus');
+      if(offlineEl) offlineEl.textContent = 'Hata: kod çalışmadı';
+    }
+  })();
+</script>
 </body>
 </html>
