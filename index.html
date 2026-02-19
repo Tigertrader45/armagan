@@ -1,17 +1,55 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Features Update</title>
+    <title>Spreken A1 Ezber Application</title>
+    <style>
+        body {
+            background-color: #1a1a1a; /* Dark Mode Background */
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .question {
+            margin: 20px 0;
+        }
+    </style>
+    <script>
+        const birthYear = 1993;
+        const birthCity = 'Ankara';
+        const currentCity = 'Manisa';
+        const nlCity = 'Helmond';
+
+        function speak(text, rate = 1) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = rate;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function handleAnswer(profile) {
+            // Personalized answers based on profile data
+            const response = `Hello, your profile info: Born in ${profile.birthYear} in ${profile.birthCity}. Currently living in ${profile.currentCity}.`;
+            console.log(response);
+            speak(response, 1.2);
+        }
+    </script>
 </head>
 <body>
-    <h1>Latest Features</h1>
-    <ul>
-        <li>Memorize mode</li>
-        <li>Dark mode</li>
-        <li>Better answers with profile data</li>
-        <li>Improved UI features</li>
-    </ul>
+    <h1>Spreken A1 Ezber</h1>
+    <div id="questions">
+        <div class="question">1. Wat is je naam? - Adın ne?</div>
+        <div class="question">2. Hoe oud ben je? - Kaç yaşındasın?</div>
+        <div class="question">3. Waar kom je vandaan? - Nerelisin?</div>
+        <div class="question">4. Wat is je favoriete kleur? - En sevdiğin renk nedir?</div>
+        <div class="question">5. Welk seizoen vind je leuk? - Hangi mevsimi seversin?</div>
+        <!-- Add up to 78 questions here -->
+    </div>
+    <button onclick="handleAnswer({birthYear, birthCity, currentCity})">Get Personalized Answer</button>
+    <script>
+        // Offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+    </script>
 </body>
 </html>
