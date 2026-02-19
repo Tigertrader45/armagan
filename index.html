@@ -1,55 +1,73 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spreken A1 Ezber Application</title>
+    <title>Spreken A1 Ezber</title>
     <style>
         body {
-            background-color: #1a1a1a; /* Dark Mode Background */
-            color: white;
             font-family: Arial, sans-serif;
         }
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .questions {
+            margin: 20px;
+        }
         .question {
-            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
         }
     </style>
-    <script>
-        const birthYear = 1993;
-        const birthCity = 'Ankara';
-        const currentCity = 'Manisa';
-        const nlCity = 'Helmond';
-
-        function speak(text, rate = 1) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = rate;
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function handleAnswer(profile) {
-            // Personalized answers based on profile data
-            const response = `Hello, your profile info: Born in ${profile.birthYear} in ${profile.birthCity}. Currently living in ${profile.currentCity}.`;
-            console.log(response);
-            speak(response, 1.2);
-        }
-    </script>
 </head>
 <body>
     <h1>Spreken A1 Ezber</h1>
-    <div id="questions">
-        <div class="question">1. Wat is je naam? - Adın ne?</div>
-        <div class="question">2. Hoe oud ben je? - Kaç yaşındasın?</div>
-        <div class="question">3. Waar kom je vandaan? - Nerelisin?</div>
-        <div class="question">4. Wat is je favoriete kleur? - En sevdiğin renk nedir?</div>
-        <div class="question">5. Welk seizoen vind je leuk? - Hangi mevsimi seversin?</div>
-        <!-- Add up to 78 questions here -->
+    <button id="toggle-dark-mode">Toggle Dark Mode</button>
+    <div class="questions">
+        <!-- 78 Dutch-Turkish questions here -->
+        <div class="question">Waar is de bibliotheek? (Kütüphane nerede?)</div>
+        <div class="question">Hoe laat is het? (Saat kaç?)</div>
+        <div class="question">Ik ben op zoek naar een restaurant. (Bir restorant arıyorum.)</div>
+        <div class="question">Kun je dat herhalen? (Bunu tekrar edebilir misin?)</div>
+        <div class="question">Wat kost het? (Bu ne kadar?)</div>
+        <div class="question">Ik heb honger. (Açım.)</div>
+        <div class="question">Hoe gaat het met je? (Nasılsın?)</div>
+        <div class="question">Waar woon je? (Nerede yaşıyorsun?)</div>
+        <div class="question">Wat is je naam? (Adın ne?)</div>
+        <div class="question">Wat doe je voor werk? (Ne iş yapıyorsun?)</div>
+        <div class="question">Kan ik met een creditcard betalen? (Kredi kartıyla ödeyebilir miyim?)</div>
+        <div class="question">Ik begrijp het niet. (Anlamıyorum.)</div>
+        <div class="question">Spreek je Engels? (İngilizce biliyor musun?)</div>
+        <div class="question">Waar kan ik een taxi vinden? (Bir taksi nerede bulabilirim?)</div>
+        <div class="question">Wat is het weer vandaag? (Bugün hava nasıl?)</div>
+        <div class="question">Ik heb een reservering. (Bir rezervasyonum var.)</div>
+        <div class="question">Mag ik het menu zien? (Menüyü görebilir miyim?)</div>
+        <div class="question">Wat is je favoriete kleur? (En sevdiğin renk ne?)</div>
+        <div class="question">Wat is je hobby? (Hobilerin neler?)</div>
+        <div class="question">Kun je me helpen? (Bana yardım edebilir misin?)</div>
+        <div class="question">Ik ben moe. (Yorgunum.)</div>
+        <div class="question">Dit is mijn vriend. (Bu benim arkadaşım.)</div>
+        <!-- Add remaining questions here up to 78 -->
     </div>
-    <button onclick="handleAnswer({birthYear, birthCity, currentCity})">Get Personalized Answer</button>
+
     <script>
-        // Offline support
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js');
-        }
+        const questions = document.querySelectorAll('.question');
+        const synth = window.speechSynthesis;
+
+        questions.forEach(question => {
+            question.addEventListener('click', () => {
+                const text = question.innerText;
+                const utterance = new SpeechSynthesisUtterance(text);
+                synth.speak(utterance);
+            });
+        });
+
+        const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
+        toggleDarkModeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
     </script>
 </body>
 </html>
